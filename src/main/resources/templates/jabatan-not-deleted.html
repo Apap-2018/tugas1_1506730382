@@ -1,0 +1,17 @@
+<head>
+    <title>Jabatan Tidak Dihapus</title>
+
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+	
+	<div class="container-fluid" th:inline="text">
+		<h4>
+			Jabatan [[${jabatan.nama}]] Tidak dapat dihapus!
+		</h4>
+	</div>
+
+</body>

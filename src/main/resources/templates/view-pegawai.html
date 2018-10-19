@@ -1,0 +1,75 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Hasil Pencarian Pegawai</title>
+
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+
+	<div class="container-fluid">
+		<br>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card" th:inline="text">
+					<div class="card-header">
+						<h3>Lihat Data Pegawai - [[ ${pegawai.nip} ]]</h3>
+					</div>
+					<div class="card-body">
+						<table class="table table-borderless">
+							<thead></thead>
+							<tbody>
+								<tr>
+									<td>NIP</td>
+									<td>[[ ${pegawai.nip} ]]</td>
+								</tr>
+								<tr>
+									<td>Nama</td>
+									<td>[[ ${pegawai.nama} ]]</td>
+								</tr>
+								<tr>
+									<td>Tempat Lahir</td>
+									<td>[[ ${pegawai.tempatLahir} ]]</td>
+								</tr>
+								<tr>
+									<td>Tanggal Lahir</td>
+									<td>[[ ${pegawai.tanggalLahir} ]]</td>
+								</tr>
+								<tr>
+									<td>Nama Instansi</td>
+									<td th:object="${pegawai}">[[*{instansi.nama}]] - [[*{instansi.provinsi.nama}]]</td>
+								</tr>
+								<tr>
+									<td>Jabatan</td>
+									<td th:object="${pegawai}">
+										<ul>
+											<li th:each="jabatan,iterationStatus : *{jabatan}" th:inline="text">[[${jabatan.nama}]]</li>
+										</ul>
+									</td>
+								</tr>
+								<tr>
+									<td>Gaji Pokok</td>
+									<td>
+										[[${gaji}]]
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<form th:action="@{/pegawai/ubah}" class="col-md-3" style="float: left;">
+			                                <input type="hidden" name="idPegawai" th:value="${pegawai.id}">
+			                                <button type="submit" class="btn btn-default">Ubah</button>
+			                            </form>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
