@@ -1,0 +1,173 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>List Pegawai</title>
+
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+
+	<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+
+
+</head>
+
+<body>
+	<nav th:replace="fragments/fragment :: navbar"></nav>
+
+	<div class="container-fluid">
+		<br>
+		<h1>Cari Pegawai</h1>
+		<div class="row">
+			<div class="col-md-6">
+				<form id="searchQuery" class="form-horizontal">
+					<table class="table table-borderless">
+						<thead>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Provinsi</td>
+								<td>
+									<select name="idProvinsi"  id="provinsi" class="form-control">
+										<option value="0" selected="selected" > -- pilih provinsi --</option>
+										<option th:each="provinsi : ${listProvinsi}" th:value="${provinsi.id}" th:text="${provinsi.nama}" class="form-control"></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Instansi</td>
+								<td>
+									<select name="idInstansi"  id="instansi" class="form-control">
+										<option value="0" selected="selected" > -- pilih instansi --</option>
+										<option th:each="instansi : ${listInstansi}" th:value="${instansi.id}" th:text="${instansi.nama}" class="form-control"></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Provinsi</td>
+								<td>
+									<select name="idJabatan"  id="jabatan" class="form-control">
+										<option value="0" selected="selected" > -- pilih jabatan --</option>
+										<option th:each="jabatan : ${listJabatan}" th:value="${jabatan.id}" th:text="${jabatan.nama}" class="form-control"></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<button id="search" type="submit" class="btn btn-submit">Cari</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table id="result">
+					<thead>
+						<th>NIP</th>
+						<th>Nama</th>
+						<th>Tempat Lahir</th>
+						<th>Tanggal Lahir</th>
+						<th>Tahun Masuk</th>
+						<th>Instansi</th>
+						<th>Jabatan</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<!-- JQuery -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#result').DataTable();
+			$('#searchQuery').submit(function(e){
+				// e.preventDefault();
+				
+				var link = "http://localhost:8080/cari?";
+				var provinsi = $('#provinsi').val();
+				var instansi = $('#instansi').val();
+				var jabatan = $('#jabatan').val();
+
+				if (provinsi != 0) {
+					link += 'idProvinsi=' + provinsi;
+					if (instansi != 0) {
+						link += '&idInstansi=' + instansi;
+						if (jabatan != 0) {
+							link += '&idJabatan=' + jabatan;
+						}
+					}
+					else if (jabatan != 0) {
+						link += '&idJabatan=' + jabatan;
+					}
+				}
+				else if (instansi != 0) {
+					link += 'idInstansi=' + instansi;
+					if (jabatan != 0) {
+						link += '&idJabatan=' + jabatan;
+					}
+				}
+				else if (jabatan != 0) {
+					link += 'idJabatan=' + jabatan;
+				}
+
+				$.getJSON(link, {
+					ajax : 'true'
+				}, function(data) {
+					console.log(data);
+					var html = '<thead>' +
+						'<th>NIP</th>' +
+						'<th>Nama</th>' +
+						'<th>Tempat Lahir</th>' +
+						'<th>Tanggal Lahir</th>' +
+						'<th>Tahun Masuk</th>' +
+						'<th>Instansi</th>' +
+						'<th>Jabatan</th>' +
+						'</thead>';
+					html += '<tbody>';
+
+					for (var i = 0; i < data.length; i++) {
+						html += '<tr>' +
+								'<td>' + data[i].nip + '</td>' +
+								'<td>' + data[i].nama + '</td>' +
+								'<td>' + data[i].tempatLahir + '</td>' +
+								'<td>' + data[i].tanggalLahir + '</td>' +
+								'<td>' + data[i].tahunMasuk + '</td>' +
+								'<td>' + data[i].instansi + '</td>' +
+								'</tr>';
+					}
+					html += '</tbody>';
+					$('#result').html(html);
+				});
+				
+			});
+		
+			$('#provinsi').change(
+		        function() {
+		            $.getJSON("http://localhost:8080/instansi", {
+		                provinsiId : $(this).val(),
+		                ajax : 'true'
+		            }, function(data) {
+		            	// console.log($(this).val());
+		                console.log(data);
+		                var html = '<option value="">--pilih instansi--</option>';
+		                var len = data.length;
+		                for ( var i = 0; i < len; i++) {
+		                    html += '<option value="' + data[i].id + '">'
+		                            + data[i].nama + '</option>';
+		                }
+		                html += '</option>';
+		                $('#instansi').html(html);
+		            });
+		        }
+			);
+		});
+	</script>
+</body>

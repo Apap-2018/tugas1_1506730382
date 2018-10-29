@@ -6,4 +6,5 @@ import java.util.List;
 public interface InstansiService {
 	InstansiModel getInstansiDetailById(long id);
 	List<InstansiModel> getAllInstansi();
+	List<InstansiModel> getAllInstansiInProvinsi(ProvinsiModel provinsi);
 }

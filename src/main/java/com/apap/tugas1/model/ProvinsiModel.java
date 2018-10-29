@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.apap.tugas1.model.InstansiModel;
 
@@ -34,6 +35,7 @@ public class ProvinsiModel implements Serializable {
 	@Column(name = "presentase_tunjangan", nullable = false)
 	private double presentaseTunjangan;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "provinsi", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private List<InstansiModel> instansiProvinsi;
 	

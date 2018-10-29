@@ -50,6 +50,7 @@ public class InstansiModel implements Serializable {
 	@JsonIgnore
 	private ProvinsiModel provinsi;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "instansi", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private List<PegawaiModel> pegawaiInstansi;
 	
